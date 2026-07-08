@@ -46,7 +46,7 @@ export function BookingDetail({ booking, onClose, onEdit, onCancelled }: Props) 
         className="animate-slide-up w-full max-w-sm rounded-2xl bg-[var(--color-cream)] p-6 shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+        <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
           {booking.customerName}
         </h2>
 

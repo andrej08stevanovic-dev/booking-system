@@ -33,7 +33,7 @@ export default async function MojaZakazivanjaPage() {
     return (
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <div className="max-w-md">
-          <h1 className="mb-3 font-[family-name:var(--font-serif)] text-3xl font-semibold">
+          <h1 className="mb-3 font-[family-name:var(--font-heading)] text-3xl font-semibold">
             Greška pri učitavanju
           </h1>
           <p className="text-[var(--color-charcoal)]/80">
@@ -64,7 +64,7 @@ export default async function MojaZakazivanjaPage() {
       <div className="mx-auto w-full max-w-2xl">
         <header className="mb-8 flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+            <h1 className="font-[family-name:var(--font-heading)] text-3xl font-semibold sm:text-4xl">
               Moja zakazivanja
             </h1>
             <p className="mt-1 text-sm text-[var(--color-charcoal)]/70">{email}</p>
@@ -94,7 +94,7 @@ export default async function MojaZakazivanjaPage() {
         ) : (
           <div className="flex flex-col gap-10">
             <section>
-              <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+              <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
                 Predstojeći termini
               </h2>
               {upcoming.length === 0 ? (
@@ -112,7 +112,7 @@ export default async function MojaZakazivanjaPage() {
 
             {past.length > 0 && (
               <section>
-                <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+                <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
                   Prošli i otkazani termini
                 </h2>
                 <div className="flex flex-col gap-3">

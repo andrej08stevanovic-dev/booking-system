@@ -107,7 +107,7 @@ export default async function Home() {
     return (
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <div className="max-w-md">
-          <h1 className="mb-3 font-[family-name:var(--font-serif)] text-3xl font-semibold">
+          <h1 className="mb-3 font-[family-name:var(--font-heading)] text-3xl font-semibold">
             Greška pri učitavanju
           </h1>
           <p className="text-[var(--color-charcoal)]/80">
@@ -138,7 +138,7 @@ export default async function Home() {
           <span className="text-sm font-medium uppercase tracking-[0.2em] text-[var(--color-terracotta)]">
             Frizerski salon · Vranje
           </span>
-          <h1 className="mt-2 font-[family-name:var(--font-serif)] text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
+          <h1 className="mt-2 font-[family-name:var(--font-heading)] text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
             Optima
           </h1>
           <p className="mx-auto mt-3 max-w-md text-[var(--color-charcoal)]/70">
@@ -198,7 +198,7 @@ export default async function Home() {
           <div className="flex flex-col gap-12">
             {/* Tim */}
             <section>
-              <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+              <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
                 Naš tim
               </h2>
               <div className="flex flex-col gap-4">
@@ -238,7 +238,7 @@ export default async function Home() {
 
             {/* Usluge po kategoriji */}
             <section>
-              <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+              <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
                 Usluge
               </h2>
               <div className="flex flex-col gap-8">

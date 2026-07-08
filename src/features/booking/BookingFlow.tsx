@@ -348,7 +348,7 @@ export function BookingFlow({
           />
         </svg>
         <h2
-          className="font-[family-name:var(--font-serif)] text-3xl font-semibold"
+          className="font-[family-name:var(--font-heading)] text-3xl font-semibold"
           style={{ animation: "fadeIn var(--duration-normal) var(--ease-out-expo) 0.5s both" }}
         >
           Termin je zakazan!
@@ -418,7 +418,7 @@ export function BookingFlow({
   if (screen === "review" && service && selectedSlot && assignment) {
     return (
       <div className="flex flex-col gap-6 animate-slide-right">
-        <h2 className="font-[family-name:var(--font-serif)] text-2xl font-semibold">
+        <h2 className="font-[family-name:var(--font-heading)] text-2xl font-semibold">
           Pregled rezervacije
         </h2>
 
@@ -731,7 +731,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function StepTitle({ title }: { title: string }) {
   return (
-    <h2 className="mb-4 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+    <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
       {title}
     </h2>
   );

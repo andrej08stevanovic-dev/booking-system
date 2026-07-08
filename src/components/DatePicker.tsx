@@ -104,7 +104,7 @@ export function DatePicker({
 
   const triggerClassName =
     variant === "heading"
-      ? "inline-flex items-center gap-2 font-[family-name:var(--font-serif)] text-2xl font-semibold capitalize sm:text-3xl text-left transition hover:text-[var(--color-terracotta)]"
+      ? "inline-flex items-center gap-2 font-[family-name:var(--font-heading)] text-2xl font-semibold capitalize sm:text-3xl text-left transition hover:text-[var(--color-terracotta)]"
       : "w-full rounded-xl border border-[var(--color-beige)] bg-white px-4 py-2.5 text-left text-[var(--color-charcoal)] outline-none transition focus:ring-2 focus:ring-[var(--color-terracotta)]";
 
   const calendarContent = (

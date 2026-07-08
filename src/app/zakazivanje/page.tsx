@@ -37,7 +37,7 @@ export default async function ZakazivanjePage() {
     return (
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <div className="max-w-md">
-          <h1 className="mb-3 font-[family-name:var(--font-serif)] text-3xl font-semibold">
+          <h1 className="mb-3 font-[family-name:var(--font-heading)] text-3xl font-semibold">
             Greška pri učitavanju
           </h1>
           <p className="text-[var(--color-charcoal)]/80">
@@ -72,7 +72,7 @@ export default async function ZakazivanjePage() {
           >
             ← Tim i usluge
           </Link>
-          <h1 className="mt-3 font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+          <h1 className="mt-3 font-[family-name:var(--font-heading)] text-3xl font-semibold sm:text-4xl">
             Zakaži termin
           </h1>
           <p className="mt-2 text-[var(--color-charcoal)]/70">

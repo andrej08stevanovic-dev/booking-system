@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { TopProgressBar } from "@/components/TopProgressBar";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-jakarta",
   display: "swap",
 });
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
 });
@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sr" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="sr" className={`${jakarta.variable} ${inter.variable}`}>
       <body className="flex min-h-dvh flex-col antialiased">
         <TopProgressBar />
         <div className="flex flex-1 flex-col">{children}</div>

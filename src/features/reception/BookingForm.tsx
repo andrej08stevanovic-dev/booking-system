@@ -206,7 +206,7 @@ export function BookingForm({ formData, mode, currentDayCalendar, onClose, onSuc
         className="animate-slide-up w-full max-w-md rounded-2xl bg-[var(--color-cream)] p-6 shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="mb-5 font-[family-name:var(--font-serif)] text-2xl font-semibold">
+        <h2 className="mb-5 font-[family-name:var(--font-heading)] text-2xl font-semibold">
           {title}
         </h2>
 

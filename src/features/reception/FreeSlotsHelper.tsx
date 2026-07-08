@@ -123,7 +123,7 @@ export function FreeSlotsHelper({ dayCalendar, formData, onSelectSlot }: Props) 
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-white/60 p-5 ring-1 ring-[var(--color-beige)] shadow-[var(--shadow-sm)] backdrop-blur-md">
       <div>
-        <h3 className="font-[family-name:var(--font-serif)] text-lg font-semibold flex items-center gap-2 text-[var(--color-charcoal)]">
+        <h3 className="font-[family-name:var(--font-heading)] text-lg font-semibold flex items-center gap-2 text-[var(--color-charcoal)]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

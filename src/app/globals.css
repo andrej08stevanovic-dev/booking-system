@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Optima brand tokens (CLAUDE.md design pravac) */
-  --color-cream: #faf7f2;
-  --color-charcoal: #222222;
-  --color-terracotta: #b76e5c;
-  --color-beige: #e8e1d9;
+  /* Demo Doktor brand tokens — čista bela + teal akcenat */
+  --color-cream: #ffffff;
+  --color-charcoal: #0f172a;
+  --color-terracotta: #0f766e;
+  --color-beige: #f0fdfa;
+  --color-sage: #059669;
 
-  /* Kategorijske boje kalendara (šablon: menja se po salonu).
-     KOSA = topla terakota (brand). NOKTI = prigušena sage — NE lavanda/ljubičasta
-     (CLAUDE.md: zabranjen "AI" izgled), jedina od ponuđenih koja poštuje topli ton. */
-  --color-sage: #7b9e87;
+  --color-bg-section: #f7f9fa;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-accent-hover: #115e59;
 
-  --font-serif: var(--font-fraunces);
+  --font-heading: var(--font-jakarta);
   --font-sans: var(--font-inter);
 }
 
 :root {
-  /* Slojeviti shadow-i (ne jedan grubi) */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.1);
+  /* Slojeviti shadow-i (suptilno, slate ton) */
+  --shadow-sm: 0 1px 3px rgb(15 23 42 / 0.08);
+  --shadow-md: 0 2px 4px rgb(15 23 42 / 0.04), 0 4px 12px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 4px 8px rgb(15 23 42 / 0.04), 0 8px 24px rgb(15 23 42 / 0.1);
 
   /* Tranzicioni default-i */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -30,10 +32,10 @@
   --duration-slow: 400ms;
 
   /* Kategorijski parovi: svetla pozadina bloka + tamniji accent bar */
-  --cat-kosa-bg: rgba(183, 110, 92, 0.14);
-  --cat-kosa-bar: #b76e5c;
-  --cat-nokti-bg: rgba(123, 158, 135, 0.16);
-  --cat-nokti-bar: #5f7d69;
+  --cat-primary-bg: rgba(15, 118, 110, 0.12);
+  --cat-primary-bar: #0f766e;
+  --cat-secondary-bg: rgba(5, 150, 105, 0.12);
+  --cat-secondary-bar: #059669;
 }
 
 body {
@@ -130,16 +132,16 @@ body {
   }
 }
 
-/* Realtime highlight na recepciji — RGB = terakota (brand) */
+/* Realtime highlight na recepciji — RGB = teal (brand) */
 @keyframes pulseHighlight {
   0% {
-    box-shadow: 0 0 0 0 rgba(183, 110, 92, 0.45);
+    box-shadow: 0 0 0 0 rgba(15, 118, 110, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(183, 110, 92, 0);
+    box-shadow: 0 0 0 8px rgba(15, 118, 110, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(183, 110, 92, 0);
+    box-shadow: 0 0 0 0 rgba(15, 118, 110, 0);
   }
 }
 .animate-pulse-highlight {

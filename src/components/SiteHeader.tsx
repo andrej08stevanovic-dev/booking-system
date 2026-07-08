@@ -6,7 +6,7 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4 sm:px-6">
         <Link
           href="/"
-          className="font-[family-name:var(--font-serif)] text-xl font-bold tracking-[-0.01em]"
+          className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.01em]"
         >
           Optima
         </Link>
