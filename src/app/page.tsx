@@ -106,14 +106,24 @@ export default async function Home() {
   if (staffRes.error || servicesRes.error || whRes.error) {
     return (
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <div className="max-w-md">
-          <h1 className="mb-3 font-[family-name:var(--font-serif)] text-3xl font-semibold">
+        <div className="max-w-md w-full">
+          <h1 className="mb-3 font-[family-name:var(--font-serif)] text-3xl font-semibold text-red-600">
             Greška pri učitavanju
           </h1>
-          <p className="text-[var(--color-charcoal)]/80">
+          <p className="text-[var(--color-charcoal)]/80 mb-6">
             Trenutno ne možemo da učitamo podatke salona. Pokušaj ponovo malo
             kasnije.
           </p>
+          <div className="p-4 bg-gray-100 text-left text-xs rounded border border-gray-300 overflow-auto font-mono max-h-60">
+            <p className="font-bold text-red-700 mb-2">DEBUG INFO:</p>
+            <p className="mb-1"><strong>NEXT_PUBLIC_SUPABASE_URL:</strong> {process.env.NEXT_PUBLIC_SUPABASE_URL ? "Postavljen (Set)" : "NIJE postavljen (Not Set)"}</p>
+            <p className="mb-1"><strong>NEXT_PUBLIC_SUPABASE_ANON_KEY:</strong> {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Postavljen (Set)" : "NIJE postavljen (Not Set)"}</p>
+            <p className="mb-2"><strong>SUPABASE_SERVICE_ROLE_KEY:</strong> {process.env.SUPABASE_SERVICE_ROLE_KEY ? "Postavljen (Set)" : "NIJE postavljen (Not Set)"}</p>
+            <hr className="my-2 border-gray-300" />
+            <p className="mb-1"><strong>staffRes.error:</strong> {staffRes.error ? JSON.stringify(staffRes.error) : "Nema greške"}</p>
+            <p className="mb-1"><strong>servicesRes.error:</strong> {servicesRes.error ? JSON.stringify(servicesRes.error) : "Nema greške"}</p>
+            <p className="mb-1"><strong>whRes.error:</strong> {whRes.error ? JSON.stringify(whRes.error) : "Nema greške"}</p>
+          </div>
         </div>
       </main>
     );
