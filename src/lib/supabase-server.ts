@@ -1,36 +1,35 @@
 import "server-only";
-
 import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { mockSupabaseClient } from "./supabase-mock";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-// Supabase klijent (anon ključ) vezan za Next `cookies()` — čita/piše Supabase Auth
-// sesijske kolačiće mušterije. Potpuno odvojen od staff sesije (staff-session.ts,
-// staff-guard.ts) — ovaj klijent ne zna ništa o STAFF_PASSWORD/SESSION_SECRET,
-// i obrnuto. Koristi se SAMO za /moja-zakazivanja i /prijava.
+// Mock server client that reads customer email from cookies instead of real Supabase Auth
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
+  const email = cookieStore.get("demo_customer_email")?.value || null;
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          // U Server Component-i (bez pratećeg action-a) ovo sme da baci — Next to
-          // zabranjuje van server actiona/route handlera. proxy.ts osvežava token,
-          // pa je bezbedno ignorisati grešku ovde (isti obrazac kao Supabase docs).
-          try {
-            for (const { name, value, options } of cookiesToSet) {
-              cookieStore.set(name, value, options);
+  const client = {
+    ...mockSupabaseClient,
+    auth: {
+      ...mockSupabaseClient.auth,
+      async getUser() {
+        if (!email) {
+          return { data: { user: null }, error: { message: "No session active" } } as any;
+        }
+        return {
+          data: {
+            user: {
+              email: email
             }
-          } catch {
-            // ignoriši — vidi komentar iznad
-          }
-        },
+          },
+          error: null
+        } as any;
       },
+      async signOut() {
+        return { data: null, error: null } as any;
+      }
     }
-  );
+  };
+
+  return client as unknown as SupabaseClient<any>;
 }

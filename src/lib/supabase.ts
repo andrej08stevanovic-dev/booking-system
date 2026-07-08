@@ -1,6 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { mockSupabaseClient } from "./supabase-mock";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder";
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Swapped out real Supabase client for in-memory mock database
+export const supabase = mockSupabaseClient;
