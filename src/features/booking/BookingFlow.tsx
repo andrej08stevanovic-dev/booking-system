@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import { DateTime } from "luxon";
 import { DatePicker } from "@/components/DatePicker";
+import { DEMO_CATEGORIES } from "@/config/demo-data";
+import { getServiceIcon } from "@/config/service-icons";
 import type { MergedSlot, Service, StaffMember } from "./types";
-import {
-  createBooking,
-  getAvailableSlots,
-  getAvailableSlotsAnyStaff,
-} from "./actions";
+import { computeDemoSlots } from "./demo-availability";
 import type { Slot } from "./availability";
 
 type Props = {
@@ -69,15 +67,6 @@ export function BookingFlow({
   const [email, setEmail] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
-  const [slots, setSlots] = useState<Slot[]>([]); // specific
-  const [anySlots, setAnySlots] = useState<MergedSlot[]>([]); // any
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [outOfRange, setOutOfRange] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
-  const [takenMsg, setTakenMsg] = useState<string | null>(null);
-
   const [submitting, setSubmitting] = useState(false);
   const customerSectionRef = useRef<HTMLElement>(null);
 
@@ -92,8 +81,10 @@ export function BookingFlow({
     [timezone, maxHorizonDays]
   );
 
-  const kosa = services.filter((s) => s.category === "kosa");
-  const nokti = services.filter((s) => s.category === "nokti");
+  const servicesByCategory = DEMO_CATEGORIES.map((cat) => ({
+    ...cat,
+    items: services.filter((s) => s.category === cat.id),
+  }));
 
   const concreteStaffName = staff.find((s) => s.id === staffId)?.full_name ?? "";
 
@@ -108,85 +99,37 @@ export function BookingFlow({
 
   const hasStaffPick = staffId !== null || anyMode;
 
-  // Učitavanje termina — KONKRETAN radnik.
-  useEffect(() => {
-    if (anyMode || !service || !staffId || !date) return;
-    let cancelled = false;
-    const serviceId = service.id;
-    async function load() {
-      setLoading(true);
-      setError(null);
-      setSelectedSlot(null);
-      try {
-        const res = await getAvailableSlots(staffId!, serviceId, date);
-        if (cancelled) return;
-        if (res.ok) {
-          setSlots(res.slots);
-          setOutOfRange(res.outOfRange);
-        } else {
-          setSlots([]);
-          setError(res.error);
-        }
-        setLoaded(true);
-      } catch {
-        if (!cancelled) {
-          setError("Došlo je do greške. Pokušaj ponovo.");
-          setLoaded(true);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [anyMode, service, staffId, date, reloadKey]);
+  // Termini — KONKRETAN radnik. Demo: čisto sinhrono lokalno računanje (vidi
+  // ./demo-availability.ts), bez baze — pa se izvodi kao derivirana vrednost
+  // (useMemo), ne kao efekat sa setState.
+  const specificResult = useMemo(() => {
+    if (anyMode || !service || !staffId || !date) return null;
+    return computeDemoSlots(date, service.duration_minutes);
+  }, [anyMode, service, staffId, date]);
 
-  // Učitavanje termina — "BILO KO" (spojeno).
-  useEffect(() => {
-    if (!anyMode || !service || !date) return;
-    let cancelled = false;
-    const serviceId = service.id;
-    async function load() {
-      setLoading(true);
-      setError(null);
-      setSelectedSlot(null);
-      setAssignment(null);
-      try {
-        const res = await getAvailableSlotsAnyStaff(serviceId, date);
-        if (cancelled) return;
-        if (res.ok) {
-          setAnySlots(res.slots);
-          setOutOfRange(res.outOfRange);
-        } else {
-          setAnySlots([]);
-          setError(res.error);
-        }
-        setLoaded(true);
-      } catch {
-        if (!cancelled) {
-          setError("Došlo je do greške. Pokušaj ponovo.");
-          setLoaded(true);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [anyMode, service, date, reloadKey]);
+  // Termini — "BILO KO" (spojeno). Isti generator; svi trenutno izabrani
+  // radnici prikazani kao slobodni na svakom terminu.
+  const anyResult = useMemo(() => {
+    if (!anyMode || !service || !date) return null;
+    return computeDemoSlots(date, service.duration_minutes);
+  }, [anyMode, service, date]);
+
+  const slots: Slot[] = specificResult?.slots ?? [];
+  const anySlots: MergedSlot[] = useMemo(() => {
+    if (!anyResult) return [];
+    return anyResult.slots.map((slot) => ({
+      startUtcISO: slot.startUtcISO,
+      label: slot.label,
+      freeStaff: staff.map((m) => ({ id: m.id, ime: m.full_name })),
+    }));
+  }, [anyResult, staff]);
+  const outOfRange = (anyMode ? anyResult?.outOfRange : specificResult?.outOfRange) ?? false;
+  const loaded = anyMode ? anyResult !== null : specificResult !== null;
 
   function resetSelectionState() {
     setDate("");
-    setSlots([]);
-    setAnySlots([]);
     setSelectedSlot(null);
     setAssignment(null);
-    setLoaded(false);
-    setTakenMsg(null);
   }
 
   function chooseService(s: Service) {
@@ -212,10 +155,6 @@ export function BookingFlow({
     setDate(value);
     setSelectedSlot(null);
     setAssignment(null);
-    setTakenMsg(null);
-    setLoaded(false);
-    setSlots([]);
-    setAnySlots([]);
   }
 
   // Izbor vremena — konkretan radnik.
@@ -243,48 +182,30 @@ export function BookingFlow({
 
   function goToReview() {
     setFormError(null);
-    if (!fullName.trim()) return setFormError("Unesi ime.");
-    if (!phone.trim()) return setFormError("Unesi broj telefona.");
+    if (!fullName.trim()) return setFormError("Unesite ime.");
+    if (!phone.trim()) return setFormError("Unesite broj telefona.");
     if (email.trim() && !/.+@.+\..+/.test(email.trim())) {
-      return setFormError("Email nije ispravan (ili ga ostavi prazan).");
+      return setFormError("Email nije ispravan (ili ga ostavite prazno).");
     }
     setScreen("review");
   }
 
+  // Demo: nema upisa u bazu (service_id iz demo podataka ne postoji u
+  // Optiminoj šemi). Simuliramo mrežno kašnjenje pa prikazujemo uspeh.
   async function confirmBooking() {
     if (!service || !selectedSlot || !assignment) return;
 
     setSubmitting(true);
     setFormError(null);
-    try {
-      const res = await createBooking({
-        serviceId: service.id,
-        startUtcISO: selectedSlot.startUtcISO,
-        origin: assignment.origin,
-        staffId:
-          assignment.origin === "specific" ? assignment.staffId : undefined,
-        fullName: fullName.trim(),
-        phone: phone.trim(),
-        email: email.trim() || undefined,
-      });
-      if (res.ok) {
-        setConfirmedStaffName(res.staffName);
-        setConfirmedWasAny(assignment.origin === "any");
-        setScreen("success");
-      } else if (res.reason === "taken") {
-        setTakenMsg("Termin je upravo zauzet, izaberi drugi.");
-        setSelectedSlot(null);
-        setAssignment(null);
-        setScreen("picker");
-        setReloadKey((k) => k + 1);
-      } else {
-        setFormError(res.message);
-      }
-    } catch {
-      setFormError("Došlo je do greške. Pokušaj ponovo.");
-    } finally {
-      setSubmitting(false);
-    }
+    const staffName =
+      assignment.origin === "specific"
+        ? assignment.staffName
+        : (staff[0]?.full_name ?? "");
+    await new Promise((resolve) => setTimeout(resolve, 1200 + Math.random() * 800));
+    setConfirmedStaffName(staffName);
+    setConfirmedWasAny(assignment.origin === "any");
+    setScreen("success");
+    setSubmitting(false);
   }
 
   function resetAll() {
@@ -374,7 +295,7 @@ export function BookingFlow({
           style={{ animation: "fadeIn var(--duration-normal) var(--ease-out-expo) 0.7s both" }}
         >
           <Row label="Usluga" value={service.name} />
-          <Row label="Radnik" value={confirmedStaffName ?? ""} />
+          <Row label="Doktor" value={confirmedStaffName ?? ""} />
           <Row
             label="Datum i vreme"
             value={`${formatDate(date)} u ${selectedSlot.label}`}
@@ -424,13 +345,12 @@ export function BookingFlow({
 
         <div className="rounded-2xl bg-white p-6 shadow-[var(--shadow-md)] ring-1 ring-[var(--color-beige)]">
           <Row label="Usluga" value={service.name} />
-          <Row label="Radnik" value={staffLineForReview} />
+          <Row label="Doktor" value={staffLineForReview} />
           <Row
             label="Datum i vreme"
             value={`${formatDate(date)} u ${selectedSlot.label}`}
           />
           <Row label="Trajanje" value={formatDuration(service.duration_minutes)} />
-          <Row label="Cena" value={formatPrice(service.price)} />
           <div className="my-3 h-px bg-[var(--color-beige)]" />
           <Row label="Ime" value={fullName.trim()} />
           <Row label="Telefon" value={phone.trim()} />
@@ -459,7 +379,7 @@ export function BookingFlow({
             className="btn-press flex-1 rounded-xl bg-[var(--color-terracotta)] px-6 py-3 font-medium text-white shadow-[var(--shadow-sm)] hover:opacity-90 disabled:opacity-60"
             style={submitting ? { animation: "pulseOpacity 1.5s ease-in-out infinite" } : undefined}
           >
-            {submitting ? "Zakazujem…" : "Potvrdi"}
+            {submitting ? "Zakazujem…" : "Potvrdite"}
           </button>
         </div>
       </div>
@@ -474,38 +394,29 @@ export function BookingFlow({
     <div className="flex flex-col gap-10">
       <ProgressBar current={currentStep} total={5} />
 
-      {takenMsg && (
-        <p className="rounded-xl bg-[#fdece8] px-5 py-4 text-[var(--color-terracotta)]">
-          {takenMsg}
-        </p>
-      )}
-
       {/* 1) USLUGA */}
       <section className="animate-fade-in">
-        <StepTitle title="Izaberi uslugu" />
+        <StepTitle title="Izaberite uslugu" />
         <div className="flex flex-col gap-6">
-          <ServiceGroup
-            title="Kosa"
-            items={kosa}
-            selectedId={service?.id ?? null}
-            onPick={chooseService}
-          />
-          <ServiceGroup
-            title="Nokti"
-            items={nokti}
-            selectedId={service?.id ?? null}
-            onPick={chooseService}
-          />
+          {servicesByCategory.map((cat) => (
+            <ServiceGroup
+              key={cat.id}
+              title={cat.label}
+              items={cat.items}
+              selectedId={service?.id ?? null}
+              onPick={chooseService}
+            />
+          ))}
         </div>
       </section>
 
       {/* 2) RADNIK */}
       {service && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberi radnika" />
+          <StepTitle title="Izaberite doktora" />
           {availableStaff.length === 0 ? (
             <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
-              Trenutno nema radnika za ovu uslugu.
+              Trenutno nema doktora za ovu uslugu.
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -519,7 +430,7 @@ export function BookingFlow({
                   {anyMode && <SelectedCheck />}
                   <span className="font-medium">✨ Bilo ko slobodan</span>
                   <span className="mt-0.5 block text-sm italic text-[var(--color-charcoal)]/60">
-                    Prikaži termine svih radnika za ovu uslugu
+                    Prikažite termine svih doktora za ovu uslugu
                   </span>
                 </button>
               )}
@@ -545,13 +456,14 @@ export function BookingFlow({
       {/* 3) DATUM */}
       {service && hasStaffPick && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberi datum" />
+          <StepTitle title="Izaberite datum" />
           <DatePicker
             value={date}
             onChange={onDateChange}
             timezone={timezone}
             minDateISO={todayISO}
             maxDateISO={maxISO}
+            placeholder="Izaberite datum"
           />
         </section>
       )}
@@ -559,27 +471,15 @@ export function BookingFlow({
       {/* 4) TERMINI */}
       {service && hasStaffPick && date && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberi termin" />
+          <StepTitle title="Izaberite termin" />
 
-          {loading && (
-            <p className="text-[var(--color-charcoal)]/70">Učitavam termine…</p>
-          )}
-
-          {!loading && error && (
-            <p className="rounded-xl bg-[#fdece8] px-5 py-4 text-[var(--color-terracotta)]">
-              {error}
-            </p>
-          )}
-
-          {!loading && !error && loaded && outOfRange && (
+          {loaded && outOfRange && (
             <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
               Datum je van perioda za zakazivanje.
             </p>
           )}
 
-          {!loading &&
-            !error &&
-            loaded &&
+          {loaded &&
             !outOfRange &&
             (anyMode ? anySlots.length === 0 : slots.length === 0) && (
               <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
@@ -588,7 +488,7 @@ export function BookingFlow({
             )}
 
           {/* Konkretan radnik */}
-          {!loading && !error && !anyMode && slots.length > 0 && (
+          {!anyMode && slots.length > 0 && (
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {slots.map((slot) => (
                 <TimeButton
@@ -602,7 +502,7 @@ export function BookingFlow({
           )}
 
           {/* "Bilo ko" — samo vremena; koga dobija se ne pita, dodela ide pri potvrdi */}
-          {!loading && !error && anyMode && anySlots.length > 0 && (
+          {anyMode && anySlots.length > 0 && (
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {anySlots.map((m) => (
                 <TimeButton
@@ -627,7 +527,7 @@ export function BookingFlow({
       {/* PODACI MUŠTERIJE — kad je termin + dodela razrešena */}
       {selectedSlot && assignment && service && (
         <section ref={customerSectionRef} className="animate-slide-right">
-          <StepTitle title="Tvoji podaci" />
+          <StepTitle title="Vaši podaci" />
           <div className="flex flex-col gap-3">
             <div>
               <label className="mb-1 block text-sm text-[var(--color-charcoal)]/70">
@@ -677,7 +577,7 @@ export function BookingFlow({
               onClick={goToReview}
               className="btn-press mt-2 rounded-xl bg-[var(--color-terracotta)] px-6 py-3 font-medium text-white shadow-[var(--shadow-sm)] hover:opacity-90"
             >
-              Pregledaj termin
+              Pregledajte termin
             </button>
           </div>
         </section>
@@ -777,23 +677,26 @@ function ServiceGroup({
       <div className="flex flex-col gap-2">
         {items.map((s) => {
           const isSel = selectedId === s.id;
+          const Icon = getServiceIcon(s.icon);
           return (
             <button
               key={s.id}
               type="button"
               onClick={() => onPick(s)}
-              className={`card-interactive relative flex w-full items-center justify-between gap-4 rounded-xl bg-white/60 px-5 py-4 text-left shadow-[var(--shadow-sm)] ring-1 ring-[var(--color-beige)] hover:ring-[var(--color-terracotta)] ${
+              className={`card-interactive relative flex w-full items-center gap-4 rounded-xl bg-white/60 px-5 py-4 text-left shadow-[var(--shadow-sm)] ring-1 ring-[var(--color-beige)] hover:ring-[var(--color-terracotta)] ${
                 isSel ? "ring-2 ring-[var(--color-terracotta)] bg-[var(--color-terracotta)]/8" : ""
               }`}
             >
               {isSel && <SelectedCheck />}
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]">
+                <Icon size={18} strokeWidth={1.75} />
+              </span>
               <span className={isSel ? "pr-6" : ""}>
                 <span className="block font-medium">{s.name}</span>
                 <span className="block text-sm text-[var(--color-charcoal)]/60">
                   {formatDuration(s.duration_minutes)}
                 </span>
               </span>
-              <span className="shrink-0 font-semibold">{formatPrice(s.price)}</span>
             </button>
           );
         })}

@@ -8,7 +8,7 @@ export function SiteHeader() {
           href="/"
           className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.01em]"
         >
-          Optima
+          Demo Doktor
         </Link>
         <nav className="flex items-center gap-5 text-sm font-medium">
           <Link

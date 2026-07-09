@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DateTime } from "luxon";
 import { supabase } from "@/lib/supabase";
 import { DatePicker } from "@/components/DatePicker";
+import { DEMO_CATEGORIES } from "@/config/demo-data";
 import { RECEPTION_CHANNEL, RECEPTION_EVENT } from "@/lib/realtime-constants";
 import { getDayCalendar, getReceptionNow } from "./actions";
 import { BookingForm, type FormMode } from "./BookingForm";
@@ -27,14 +28,16 @@ type Props = {
   formData: ReceptionFormData;
 };
 
-// Boja bloka po kategoriji usluge (šablon: menja se u globals.css po salonu).
+// Boja bloka po kategoriji usluge (šablon: menja se u globals.css po ordinaciji).
 // Svetla pozadina + tamniji levi accent bar (Google-Calendar stil), tamni tekst.
-const CATEGORY_STYLES: Record<string, { bg: string; bar: string }> = {
-  kosa: { bg: "var(--cat-kosa-bg)", bar: "var(--cat-kosa-bar)" },
-  nokti: { bg: "var(--cat-nokti-bg)", bar: "var(--cat-nokti-bar)" },
-};
+// Mapirano po INDEKSU kategorije (ne po nazivu) — radi za bilo koji set kategorija.
+const CATEGORY_COLOR_PAIRS = [
+  { bg: "var(--cat-primary-bg)", bar: "var(--cat-primary-bar)" },
+  { bg: "var(--cat-secondary-bg)", bar: "var(--cat-secondary-bar)" },
+];
 function catStyle(category: string | null) {
-  return CATEGORY_STYLES[category ?? ""] ?? CATEGORY_STYLES.kosa;
+  const idx = DEMO_CATEGORIES.findIndex((c) => c.id === category);
+  return CATEGORY_COLOR_PAIRS[idx >= 0 ? idx % CATEGORY_COLOR_PAIRS.length : 0];
 }
 
 function formatMinutes(totalMinutes: number): string {

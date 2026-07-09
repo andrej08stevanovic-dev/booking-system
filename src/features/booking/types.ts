@@ -1,4 +1,5 @@
-export type Category = "kosa" | "nokti";
+// Generička kategorija — id iz DEMO_CATEGORIES (npr. "tretmani"), ne hardkodovana unija.
+export type Category = string;
 
 export type Service = {
   id: string;
@@ -6,6 +7,8 @@ export type Service = {
   category: Category;
   duration_minutes: number;
   price: number;
+  description?: string;
+  icon?: string;
 };
 
 export type StaffMember = {

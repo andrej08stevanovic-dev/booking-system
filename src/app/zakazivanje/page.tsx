@@ -1,64 +1,17 @@
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { DEMO_SERVICES, DEMO_DOCTOR } from "@/config/demo-data";
+import { DEMO_TIMEZONE, DEMO_MAX_HORIZON_DAYS } from "@/features/booking/demo-availability";
 import { SiteHeader } from "@/components/SiteHeader";
 import { BookingFlow } from "@/features/booking/BookingFlow";
 import type { Service, StaffMember } from "@/features/booking/types";
 
-// Uvek sveže iz baze.
-export const dynamic = "force-dynamic";
-
-export default async function ZakazivanjePage() {
-  const [servicesRes, staffRes, linkRes, settingsRes] = await Promise.all([
-    supabase
-      .from("services")
-      .select("id, name, category, duration_minutes, price")
-      .eq("is_active", true)
-      .order("category")
-      .order("name"),
-    supabase
-      .from("staff")
-      .select("id, full_name")
-      .eq("is_active", true)
-      .order("full_name"),
-    supabase.from("staff_services").select("staff_id, service_id"),
-    supabase
-      .from("settings")
-      .select("timezone, max_horizon_days")
-      .eq("id", 1)
-      .single(),
-  ]);
-
-  if (
-    servicesRes.error ||
-    staffRes.error ||
-    linkRes.error ||
-    settingsRes.error
-  ) {
-    return (
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <div className="max-w-md">
-          <h1 className="mb-3 font-[family-name:var(--font-heading)] text-3xl font-semibold">
-            Greška pri učitavanju
-          </h1>
-          <p className="text-[var(--color-charcoal)]/80">
-            Trenutno ne možemo da učitamo usluge i tim. Pokušaj ponovo malo
-            kasnije.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  const services = (servicesRes.data ?? []) as Service[];
-  const staff = (staffRes.data ?? []) as StaffMember[];
-  const links = (linkRes.data ?? []) as {
-    staff_id: string;
-    service_id: string;
-  }[];
-  const settings = settingsRes.data as {
-    timezone: string;
-    max_horizon_days: number;
-  };
+export default function ZakazivanjePage() {
+  const services: Service[] = DEMO_SERVICES;
+  const staff: StaffMember[] = [{ id: DEMO_DOCTOR.id, full_name: DEMO_DOCTOR.name }];
+  const links = DEMO_SERVICES.map((s) => ({
+    staff_id: DEMO_DOCTOR.id,
+    service_id: s.id,
+  }));
 
   return (
     <>
@@ -76,7 +29,7 @@ export default async function ZakazivanjePage() {
             Zakaži termin
           </h1>
           <p className="mt-2 text-[var(--color-charcoal)]/70">
-            Izaberi uslugu, radnika i vreme.
+            Izaberite uslugu, doktora i vreme.
           </p>
         </header>
 
@@ -84,8 +37,8 @@ export default async function ZakazivanjePage() {
           services={services}
           staff={staff}
           links={links}
-          timezone={settings.timezone}
-          maxHorizonDays={settings.max_horizon_days}
+          timezone={DEMO_TIMEZONE}
+          maxHorizonDays={DEMO_MAX_HORIZON_DAYS}
         />
       </div>
       </main>
