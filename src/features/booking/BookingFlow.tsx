@@ -65,7 +65,18 @@ export function BookingFlow({
   const [formError, setFormError] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+  const staffSectionRef = useRef<HTMLElement>(null);
+  const dateSectionRef = useRef<HTMLElement>(null);
+  const slotsSectionRef = useRef<HTMLElement>(null);
   const customerSectionRef = useRef<HTMLElement>(null);
+
+  // Gladak skrol do sledećeg koraka. Odlaganje: sekcija se tek pojavljuje
+  // (uslovni render), pa mora prvo da se nacrta da bi skrol imao metu.
+  function scrollToStep(ref: React.RefObject<HTMLElement | null>) {
+    setTimeout(() => {
+      ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }
 
   // Granice date inputa u beogradskoj zoni (UX; server svejedno reproverava).
   const todayISO = useMemo(
@@ -134,24 +145,28 @@ export function BookingFlow({
     setStaffId(null);
     setAnyMode(false);
     resetSelectionState();
+    scrollToStep(staffSectionRef);
   }
 
   function chooseConcreteStaff(id: string) {
     setStaffId(id);
     setAnyMode(false);
     resetSelectionState();
+    scrollToStep(dateSectionRef);
   }
 
   function chooseAny() {
     setAnyMode(true);
     setStaffId(null);
     resetSelectionState();
+    scrollToStep(dateSectionRef);
   }
 
   function onDateChange(value: string) {
     setDate(value);
     setSelectedSlot(null);
     setAssignment(null);
+    if (value) scrollToStep(slotsSectionRef);
   }
 
   // Izbor vremena — konkretan radnik.
@@ -162,9 +177,7 @@ export function BookingFlow({
       staffId: staffId!,
       staffName: concreteStaffName,
     });
-    setTimeout(() => {
-      customerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    scrollToStep(customerSectionRef);
   }
 
   // Izbor vremena — "bilo ko". Sistem NIKAD ne pita kod koga; dodela ide
@@ -172,9 +185,7 @@ export function BookingFlow({
   function pickAnyTime(m: MergedSlot) {
     setSelectedSlot({ startUtcISO: m.startUtcISO, label: m.label });
     setAssignment({ origin: "any" });
-    setTimeout(() => {
-      customerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    scrollToStep(customerSectionRef);
   }
 
   function goToReview() {
@@ -412,7 +423,7 @@ export function BookingFlow({
 
       {/* 2) RADNIK */}
       {service && (
-        <section className="animate-slide-right">
+        <section ref={staffSectionRef} className="scroll-mt-20 animate-slide-right">
           <StepTitle n={2} title="Izaberite doktora" done={hasStaffPick} />
           {availableStaff.length === 0 ? (
             <p className="rounded-xl bg-[var(--color-mint-strong)] px-5 py-4 text-[var(--color-charcoal)]/80">
@@ -455,7 +466,7 @@ export function BookingFlow({
 
       {/* 3) DATUM */}
       {service && hasStaffPick && (
-        <section className="animate-slide-right">
+        <section ref={dateSectionRef} className="scroll-mt-20 animate-slide-right">
           <StepTitle n={3} title="Izaberite datum" done={!!date} />
           <DatePicker
             value={date}
@@ -470,7 +481,7 @@ export function BookingFlow({
 
       {/* 4) TERMINI */}
       {service && hasStaffPick && date && (
-        <section className="animate-slide-right">
+        <section ref={slotsSectionRef} className="scroll-mt-20 animate-slide-right">
           <StepTitle n={4} title="Izaberite termin" done={!!selectedSlot} />
 
           {loaded && outOfRange && (
@@ -526,7 +537,7 @@ export function BookingFlow({
 
       {/* PODACI MUŠTERIJE — kad je termin + dodela razrešena */}
       {selectedSlot && assignment && service && (
-        <section ref={customerSectionRef} className="animate-slide-right">
+        <section ref={customerSectionRef} className="scroll-mt-20 animate-slide-right">
           <StepTitle n={5} title="Vaši podaci" done={false} />
           <div className="flex flex-col gap-3">
             <div>
