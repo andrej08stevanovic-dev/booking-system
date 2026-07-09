@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { TopProgressBar } from "@/components/TopProgressBar";
 import { DEMO_CLINIC } from "@/config/demo-data";
@@ -17,6 +17,15 @@ const inter = Inter({
   display: "swap",
 });
 
+// Display serif — samo za velike naslove (H1/H2). Daje "premium ordinacija"
+// ton koji geometrijski sans sam ne može; UI/dugmad ostaju na Jakarti.
+const fraunces = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  style: ["normal", "italic"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: `${DEMO_CLINIC.name} — ${DEMO_CLINIC.tagline}`,
   description: `Online zakazivanje termina — ${DEMO_CLINIC.tagline}, ${DEMO_CLINIC.city}.`,
@@ -28,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sr" className={`${jakarta.variable} ${inter.variable}`}>
+    <html lang="sr" className={`${jakarta.variable} ${inter.variable} ${fraunces.variable}`}>
       <body className="flex min-h-dvh flex-col antialiased">
         <TopProgressBar />
         <div className="flex flex-1 flex-col">{children}</div>

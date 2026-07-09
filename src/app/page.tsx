@@ -1,9 +1,9 @@
 import Link from "next/link";
 import {
+  ArrowDown,
   CalendarClock,
   CalendarX2,
   CheckCircle2,
-  Check,
 } from "lucide-react";
 import {
   DEMO_CLINIC,
@@ -53,51 +53,66 @@ export default function Home() {
     <>
       <SiteHeader />
       <main>
-        {/* HERO */}
-        <section className="hero-glow px-4 pb-20 pt-14 sm:px-6 sm:pb-16 sm:pt-16">
-          <div className="mx-auto w-full max-w-2xl text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[var(--color-terracotta)] ring-1 ring-[var(--color-beige)]">
+        {/* HERO — jedan ekran, jedna misao: bedž → naslov → rečenica → CTA.
+            Levo poravnat na mobilnom (editorial), centriran na sm+.
+            Elementi ulaze stagger animacijom (animate-rise + animationDelay). */}
+        <section className="hero-glow px-5 pb-16 pt-12 sm:px-6 sm:pb-16 sm:pt-20">
+          <div className="mx-auto w-full max-w-2xl sm:text-center">
+            <span className="animate-rise inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[var(--color-terracotta)] ring-1 ring-[var(--color-beige)]">
               {DEMO_CLINIC.tagline} · {DEMO_CLINIC.city}
             </span>
-            <h1 className="mt-6 font-[family-name:var(--font-heading)] text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] sm:mt-5 sm:text-5xl sm:leading-[1.1]">
-              Zakažite termin{" "}
-              <span className="text-[var(--color-terracotta)]">online</span> —
-              bez poziva i čekanja
+            <h1
+              className="animate-rise mt-6 font-[family-name:var(--font-display)] text-[44px] font-medium leading-[1.06] tracking-[-0.015em] sm:text-6xl"
+              style={{ animationDelay: "70ms" }}
+            >
+              Vaš termin.
+              <span className="block italic text-[var(--color-terracotta)]">
+                Bez poziva i čekanja.
+              </span>
             </h1>
-            <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-charcoal)]/70 sm:mt-4 sm:text-base">
-              Izaberite uslugu i vreme koje vam odgovara. Potvrda stiže odmah,
-              dostupno 24 sata dnevno.
+            <p
+              className="animate-rise mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-charcoal)]/70 sm:mx-auto sm:text-base"
+              style={{ animationDelay: "140ms" }}
+            >
+              Izaberite uslugu i vreme koje vam odgovara — potvrda stiže istog
+              trenutka, 24 sata dnevno.
             </p>
 
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:mt-7 sm:flex-row">
+            <div
+              className="animate-rise mt-8 flex flex-col gap-5 sm:items-center"
+              style={{ animationDelay: "210ms" }}
+            >
               <Link
                 href="/zakazivanje"
-                className="btn-press w-full rounded-xl bg-[var(--color-terracotta)] px-8 py-3.5 font-medium text-white shadow-[var(--shadow-md)] hover:bg-[var(--color-accent-hover)] sm:w-auto"
+                className="btn-press w-full rounded-xl bg-[var(--color-terracotta)] px-8 py-4 text-center text-[17px] font-medium text-white shadow-[var(--shadow-md)] hover:bg-[var(--color-accent-hover)] sm:w-auto sm:text-base"
               >
                 Zakažite termin
               </Link>
               <a
                 href="#usluge"
-                className="btn-press w-full rounded-xl bg-white px-8 py-3.5 font-medium text-[var(--color-charcoal)] ring-1 ring-[var(--color-beige)] hover:ring-[var(--color-terracotta)] sm:w-auto"
+                className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-[var(--color-charcoal)]/70 underline-offset-4 transition hover:text-[var(--color-terracotta)] hover:underline sm:self-center"
               >
                 Pogledajte usluge
+                <ArrowDown size={15} strokeWidth={2} />
               </a>
             </div>
 
-            <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px] text-[var(--color-charcoal)]/60 sm:mt-5">
-              {TRUST_ITEMS.map((t) => (
-                <li key={t} className="flex items-center gap-1">
-                  <Check size={14} className="text-[var(--color-sage)]" strokeWidth={2.5} />
-                  {t}
-                </li>
-              ))}
-            </ul>
+            <p
+              className="animate-rise mt-7 text-[13px] tracking-wide text-[var(--color-charcoal)]/55"
+              style={{ animationDelay: "280ms" }}
+            >
+              {TRUST_ITEMS.join(" · ")}
+            </p>
 
-            {/* Mini-mockup potvrđenog termina — prodaje proizvod u prvoj sekundi */}
-            <div className="mt-12 flex justify-center sm:mt-10">
+            {/* Mini-mockup potvrđenog termina — prodaje proizvod u prvoj sekundi.
+                Uspravan i ceo vidljiv; bez rotacije koja je na telefonu delovala
+                kao greška. */}
+            <div
+              className="animate-rise mt-12 flex sm:mt-14 sm:justify-center"
+              style={{ animationDelay: "360ms" }}
+            >
               <div
                 className="animate-float w-full max-w-xs rounded-2xl bg-white p-5 text-left shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
-                style={{ rotate: "-1.5deg" }}
                 aria-hidden="true"
               >
                 <div className="flex items-center gap-3">
@@ -149,7 +164,7 @@ export default function Home() {
         {/* USLUGE — mint pozadina razbija belu monotoniju */}
         <section id="usluge" className="bg-[var(--color-mint)] px-4 py-16 sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-3xl">
-            <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
+            <h2 className="text-center font-[family-name:var(--font-display)] text-3xl font-medium">
               Usluge
             </h2>
             <p className="mx-auto mt-2 max-w-md text-center text-[var(--color-charcoal)]/60">
@@ -167,7 +182,7 @@ export default function Home() {
         {/* TIM */}
         <section className="px-4 py-16 sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-3xl">
-            <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
+            <h2 className="text-center font-[family-name:var(--font-display)] text-3xl font-medium">
               Naš tim
             </h2>
             <div className="mx-auto mt-8 max-w-lg rounded-2xl bg-white p-6 shadow-[var(--shadow-md)] ring-1 ring-[var(--color-beige)]">
@@ -203,7 +218,7 @@ export default function Home() {
         {/* TAMNA CTA TRAKA — pred footer */}
         <section className="bg-[var(--color-dark)] px-4 py-16 text-center text-white sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-xl">
-            <h2 className="font-[family-name:var(--font-heading)] text-3xl font-semibold">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium">
               Spremni za prvi korak?
             </h2>
             <p className="mt-2 text-white/70">
