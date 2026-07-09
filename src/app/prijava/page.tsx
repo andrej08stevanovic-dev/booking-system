@@ -31,7 +31,7 @@ export default async function PrijavaPage({
         )}
 
         {params.poslato ? (
-          <p className="rounded-xl bg-[var(--color-beige)] px-4 py-3 text-sm text-[var(--color-charcoal)]/80">
+          <p className="rounded-xl bg-[var(--color-mint-strong)] px-4 py-3 text-sm text-[var(--color-charcoal)]/80">
             {GENERIC_MESSAGE}
           </p>
         ) : (
@@ -42,7 +42,7 @@ export default async function PrijavaPage({
               placeholder="vas@email.com"
               required
               autoFocus
-              className="w-full rounded-xl border border-[var(--color-beige)] bg-white/60 px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--color-terracotta)]"
+              className="w-full rounded-xl border border-[var(--color-beige)] bg-white px-4 py-3 outline-none transition focus:border-[var(--color-terracotta)] focus:ring-[3px] focus:ring-[var(--color-terracotta)]/15"
             />
             <button
               type="submit"

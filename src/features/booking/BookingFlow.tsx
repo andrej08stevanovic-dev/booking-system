@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useRef } from "react";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { DateTime } from "luxon";
 import { DatePicker } from "@/components/DatePicker";
 import { DEMO_CATEGORIES, DEMO_CLINIC } from "@/config/demo-data";
@@ -228,7 +229,7 @@ export function BookingFlow({
     assignment?.origin === "specific"
       ? assignment.staffName
       : assignment?.origin === "any"
-        ? "Dodeljujemo vam slobodnog radnika"
+        ? "Dodeljujemo vam slobodnog doktora"
         : "";
 
   // ---------------- EKRAN USPEHA ----------------
@@ -287,7 +288,7 @@ export function BookingFlow({
         )}
 
         <div
-          className="mt-6 rounded-xl bg-[var(--color-cream)] p-5 text-left"
+          className="mt-6 rounded-xl bg-[var(--color-mint)] p-5 text-left"
           style={{ animation: "fadeIn var(--duration-normal) var(--ease-out-expo) 0.7s both" }}
         >
           <Row label="Usluga" value={service.name} />
@@ -314,13 +315,13 @@ export function BookingFlow({
           <div className="mt-3 flex flex-col-reverse gap-3 sm:flex-row">
             <Link
               href="/"
-              className="btn-press flex-1 rounded-xl border border-[var(--color-beige)] px-6 py-3 text-center font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-beige)]"
+              className="btn-press flex-1 rounded-xl border border-[var(--color-beige)] px-6 py-3 text-center font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-mint)]"
             >
               Nazad na početnu
             </Link>
             <Link
               href="/prijava"
-              className="btn-press flex-1 rounded-xl border border-[var(--color-beige)] px-6 py-3 text-center font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-beige)]"
+              className="btn-press flex-1 rounded-xl border border-[var(--color-beige)] px-6 py-3 text-center font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-mint)]"
             >
               Pogledajte svoje termine
             </Link>
@@ -363,7 +364,7 @@ export function BookingFlow({
             type="button"
             onClick={() => setScreen("picker")}
             disabled={submitting}
-            className="btn-press rounded-xl border border-[var(--color-beige)] px-6 py-3 font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-beige)] disabled:opacity-50"
+            className="btn-press rounded-xl border border-[var(--color-beige)] px-6 py-3 font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-mint)] disabled:opacity-50"
           >
             Nazad
           </button>
@@ -385,13 +386,17 @@ export function BookingFlow({
   // Korak se izvodi iz stanja (jedna skrol-stranica, sekcije se progresivno otkrivaju).
   const currentStep = !service ? 1 : !hasStaffPick ? 2 : !date ? 3 : !selectedSlot ? 4 : 5;
 
+  // Sticky rezime na dnu: raste kako mušterija bira; sklanja se čim je termin
+  // izabran (tada je fokus na formi ispod — traka bi smetala tastaturi).
+  const showSummaryBar = !!service && !selectedSlot;
+
   return (
-    <div className="flex flex-col gap-10">
+    <div className={`flex flex-col gap-10 ${showSummaryBar ? "pb-20" : ""}`}>
       <ProgressBar current={currentStep} total={5} />
 
       {/* 1) USLUGA */}
       <section className="animate-fade-in">
-        <StepTitle title="Izaberite uslugu" />
+        <StepTitle n={1} title="Izaberite uslugu" done={!!service} />
         <div className="flex flex-col gap-6">
           {servicesByCategory.map((cat) => (
             <ServiceGroup
@@ -408,9 +413,9 @@ export function BookingFlow({
       {/* 2) RADNIK */}
       {service && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberite doktora" />
+          <StepTitle n={2} title="Izaberite doktora" done={hasStaffPick} />
           {availableStaff.length === 0 ? (
-            <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
+            <p className="rounded-xl bg-[var(--color-mint-strong)] px-5 py-4 text-[var(--color-charcoal)]/80">
               Trenutno nema doktora za ovu uslugu.
             </p>
           ) : (
@@ -423,7 +428,7 @@ export function BookingFlow({
                   className={`${cardBase} ${anyMode ? cardActive : ""} sm:col-span-2`}
                 >
                   {anyMode && <SelectedCheck />}
-                  <span className="font-medium">✨ Bilo ko slobodan</span>
+                  <span className="font-medium">Bilo ko slobodan</span>
                   <span className="mt-0.5 block text-sm italic text-[var(--color-charcoal)]/60">
                     Prikažite termine svih doktora za ovu uslugu
                   </span>
@@ -451,7 +456,7 @@ export function BookingFlow({
       {/* 3) DATUM */}
       {service && hasStaffPick && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberite datum" />
+          <StepTitle n={3} title="Izaberite datum" done={!!date} />
           <DatePicker
             value={date}
             onChange={onDateChange}
@@ -466,10 +471,10 @@ export function BookingFlow({
       {/* 4) TERMINI */}
       {service && hasStaffPick && date && (
         <section className="animate-slide-right">
-          <StepTitle title="Izaberite termin" />
+          <StepTitle n={4} title="Izaberite termin" done={!!selectedSlot} />
 
           {loaded && outOfRange && (
-            <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
+            <p className="rounded-xl bg-[var(--color-mint-strong)] px-5 py-4 text-[var(--color-charcoal)]/80">
               Datum je van perioda za zakazivanje.
             </p>
           )}
@@ -477,7 +482,7 @@ export function BookingFlow({
           {loaded &&
             !outOfRange &&
             (anyMode ? anySlots.length === 0 : slots.length === 0) && (
-              <p className="rounded-xl bg-[var(--color-beige)] px-5 py-4 text-[var(--color-charcoal)]/80">
+              <p className="rounded-xl bg-[var(--color-mint-strong)] px-5 py-4 text-[var(--color-charcoal)]/80">
                 Nema slobodnih termina tog dana.
               </p>
             )}
@@ -522,7 +527,7 @@ export function BookingFlow({
       {/* PODACI MUŠTERIJE — kad je termin + dodela razrešena */}
       {selectedSlot && assignment && service && (
         <section ref={customerSectionRef} className="animate-slide-right">
-          <StepTitle title="Vaši podaci" />
+          <StepTitle n={5} title="Vaši podaci" done={false} />
           <div className="flex flex-col gap-3">
             <div>
               <label className="mb-1 block text-sm text-[var(--color-charcoal)]/70">
@@ -577,6 +582,27 @@ export function BookingFlow({
           </div>
         </section>
       )}
+
+      {/* STICKY REZIME — svaki klik ima vidljivu posledicu na dnu ekrana */}
+      {showSummaryBar && service && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-4 pb-4">
+          <div className="animate-slide-up pointer-events-auto mx-auto flex w-full max-w-2xl items-center justify-between gap-3 rounded-2xl bg-[var(--color-dark)]/95 px-5 py-3 text-white shadow-[var(--shadow-lg)] backdrop-blur">
+            <p className="truncate text-sm">
+              <span className="font-medium">{service.name}</span>
+              {hasStaffPick && (
+                <span className="text-white/60">
+                  {" "}
+                  · {anyMode ? "Bilo ko slobodan" : concreteStaffName}
+                </span>
+              )}
+              {date && <span className="text-white/60"> · {formatDate(date)}</span>}
+            </p>
+            <span className="shrink-0 text-xs font-medium text-white/50">
+              Korak {currentStep}/5
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -594,7 +620,7 @@ function TimeButton({
     <button
       type="button"
       onClick={onClick}
-      className={`btn-press rounded-full px-3 py-2 text-center font-medium ring-1 ${
+      className={`btn-press rounded-full px-3 py-2.5 text-center font-medium ring-1 ${
         active
           ? "bg-[var(--color-terracotta)] text-white ring-[var(--color-terracotta)] shadow-[var(--shadow-sm)]"
           : "bg-white ring-[var(--color-beige)] hover:bg-[var(--color-terracotta)]/8 hover:ring-[var(--color-terracotta)]"
@@ -624,9 +650,20 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-function StepTitle({ title }: { title: string }) {
+// Naslov koraka sa numerisanim kružićem: popunjen teal + ✓ kad je korak
+// završen, obrub sa brojem dok je aktuelan.
+function StepTitle({ n, title, done }: { n: number; title: string; done: boolean }) {
   return (
-    <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
+    <h2 className="mb-4 flex items-center gap-3 font-[family-name:var(--font-heading)] text-2xl font-semibold">
+      <span
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors duration-300 ${
+          done
+            ? "bg-[var(--color-terracotta)] text-white"
+            : "bg-white text-[var(--color-terracotta)] ring-2 ring-[var(--color-terracotta)]"
+        }`}
+      >
+        {done ? <Check size={16} strokeWidth={3} /> : n}
+      </span>
       {title}
     </h2>
   );

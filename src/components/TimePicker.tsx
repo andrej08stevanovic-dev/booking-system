@@ -79,7 +79,7 @@ export function TimePicker({
                       ? "bg-[var(--color-terracotta)] font-medium text-white"
                       : isDisabled
                       ? "text-[var(--color-charcoal)]/30 line-through cursor-not-allowed opacity-50 hover:bg-transparent"
-                      : "hover:bg-[var(--color-beige)]"
+                      : "hover:bg-[var(--color-mint)]"
                   }`}
                 >
                   {t}

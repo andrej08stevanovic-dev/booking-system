@@ -62,7 +62,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
             setError(null);
           }}
           disabled={isPending}
-          className="rounded-xl border border-[var(--color-beige)] px-5 py-2 text-sm font-medium transition hover:bg-[var(--color-beige)] disabled:opacity-50"
+          className="rounded-xl border border-[var(--color-beige)] px-5 py-2 text-sm font-medium transition hover:bg-[var(--color-mint)] disabled:opacity-50"
         >
           Ne, zadržite
         </button>

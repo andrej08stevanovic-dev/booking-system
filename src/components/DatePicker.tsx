@@ -113,7 +113,7 @@ export function DatePicker({
         <button
           type="button"
           onClick={() => setViewMonth((m) => m.minus({ months: 1 }))}
-          className="rounded-lg px-2 py-1 text-[var(--color-charcoal)]/60 transition hover:bg-[var(--color-beige)]"
+          className="rounded-lg px-2 py-1 text-[var(--color-charcoal)]/60 transition hover:bg-[var(--color-mint)]"
           aria-label="Prethodni mesec"
         >
           ‹
@@ -122,7 +122,7 @@ export function DatePicker({
         <button
           type="button"
           onClick={() => setViewMonth((m) => m.plus({ months: 1 }))}
-          className="rounded-lg px-2 py-1 text-[var(--color-charcoal)]/60 transition hover:bg-[var(--color-beige)]"
+          className="rounded-lg px-2 py-1 text-[var(--color-charcoal)]/60 transition hover:bg-[var(--color-mint)]"
           aria-label="Sledeći mesec"
         >
           ›
@@ -154,8 +154,8 @@ export function DatePicker({
                   : disabled
                     ? "text-[var(--color-charcoal)]/25"
                     : isToday
-                      ? "ring-1 ring-[var(--color-terracotta)] hover:bg-[var(--color-beige)]"
-                      : "hover:bg-[var(--color-beige)]"
+                      ? "ring-1 ring-[var(--color-terracotta)] hover:bg-[var(--color-mint)]"
+                      : "hover:bg-[var(--color-mint)]"
               }`}
             >
               {dayNum}
@@ -168,7 +168,7 @@ export function DatePicker({
         type="button"
         onClick={goToday}
         disabled={isDisabled(todayISO)}
-        className="mt-3 w-full rounded-lg py-1.5 text-center text-sm font-medium text-[var(--color-terracotta)] transition hover:bg-[var(--color-beige)] disabled:opacity-40"
+        className="mt-3 w-full rounded-lg py-1.5 text-center text-sm font-medium text-[var(--color-terracotta)] transition hover:bg-[var(--color-mint)] disabled:opacity-40"
       >
         Danas
       </button>

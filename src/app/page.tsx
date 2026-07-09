@@ -1,13 +1,19 @@
 import Link from "next/link";
 import {
+  CalendarClock,
+  CalendarX2,
+  CheckCircle2,
+  Check,
+} from "lucide-react";
+import {
   DEMO_CLINIC,
   DEMO_CATEGORIES,
   DEMO_SERVICES,
   DEMO_DOCTOR,
-  DEMO_WORKING_HOURS,
 } from "@/config/demo-data";
 import type { Service } from "@/features/booking/types";
 import { getServiceIcon } from "@/config/service-icons";
+import { SiteHeader } from "@/components/SiteHeader";
 
 function formatDuration(min: number) {
   if (min < 60) return `${min} min`;
@@ -15,6 +21,26 @@ function formatDuration(min: number) {
   const m = min % 60;
   return m === 0 ? `${h} h` : `${h} h ${m} min`;
 }
+
+const TRUST_ITEMS = ["Potvrda odmah", "Bez naloga i lozinke", "Otkazivanje jednim klikom"];
+
+const BENEFITS = [
+  {
+    icon: CalendarClock,
+    title: "Dostupno 24/7",
+    text: "Zakažite kad vama odgovara — i nedeljom u ponoć.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Potvrda odmah",
+    text: "Termin je rezervisan istog trenutka, bez čekanja na poziv.",
+  },
+  {
+    icon: CalendarX2,
+    title: "Lako otkazivanje",
+    text: "Sprečeni ste? Otkažite termin jednim klikom, bez objašnjavanja.",
+  },
+];
 
 export default function Home() {
   const services: Service[] = DEMO_SERVICES;
@@ -24,97 +50,175 @@ export default function Home() {
   }));
 
   return (
-    <main className="px-4 py-10 sm:px-6 sm:py-12">
-      <div className="mx-auto w-full max-w-2xl">
-        {/* Hero */}
-        <header className="mb-10 text-center">
-          <span className="text-sm font-medium uppercase tracking-[0.2em] text-[var(--color-terracotta)]">
-            Ordinacija estetske medicine · Vranje
-          </span>
-          <h1 className="mt-2 font-[family-name:var(--font-heading)] text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
-            {DEMO_CLINIC.name}
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-[var(--color-charcoal)]/70">
-            Zakažite termin online — bez poziva, dostupno 24/7
-          </p>
+    <>
+      <SiteHeader />
+      <main>
+        {/* HERO */}
+        <section className="hero-glow px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+          <div className="mx-auto w-full max-w-2xl text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[var(--color-terracotta)] ring-1 ring-[var(--color-beige)]">
+              {DEMO_CLINIC.tagline} · {DEMO_CLINIC.city}
+            </span>
+            <h1 className="mt-5 font-[family-name:var(--font-heading)] text-4xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+              Zakažite termin{" "}
+              <span className="text-[var(--color-terracotta)]">online</span> —
+              bez poziva i čekanja
+            </h1>
+            <p className="mx-auto mt-4 max-w-md text-[var(--color-charcoal)]/70">
+              Izaberite uslugu i vreme koje vam odgovara. Potvrda stiže odmah,
+              dostupno 24 sata dnevno.
+            </p>
 
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <Link
-              href="/zakazivanje"
-              className="btn-press rounded-xl bg-[var(--color-terracotta)] px-8 py-3.5 font-medium text-white shadow-[var(--shadow-md)] hover:opacity-90"
-            >
-              Zakažite termin
-            </Link>
-            <Link
-              href="/prijava"
-              className="border-b border-transparent text-sm font-medium text-[var(--color-charcoal)]/70 transition hover:border-[var(--color-terracotta)] hover:text-[var(--color-terracotta)]"
-            >
-              Moji termini
-            </Link>
-          </div>
+            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/zakazivanje"
+                className="btn-press w-full rounded-xl bg-[var(--color-terracotta)] px-8 py-3.5 font-medium text-white shadow-[var(--shadow-md)] hover:bg-[var(--color-accent-hover)] sm:w-auto"
+              >
+                Zakažite termin
+              </Link>
+              <a
+                href="#usluge"
+                className="btn-press w-full rounded-xl bg-white px-8 py-3.5 font-medium text-[var(--color-charcoal)] ring-1 ring-[var(--color-beige)] hover:ring-[var(--color-terracotta)] sm:w-auto"
+              >
+                Pogledajte usluge
+              </a>
+            </div>
 
-          {/* Radno vreme */}
-          <div className="mt-8 rounded-2xl bg-white/60 p-5 shadow-[var(--shadow-md)] ring-1 ring-[var(--color-beige)]">
-            <h2 className="mb-2 text-xs font-medium uppercase tracking-[0.08em] text-[var(--color-terracotta)]">
-              Radno vreme
-            </h2>
-            <dl className="flex flex-col gap-1 text-sm">
-              {DEMO_WORKING_HOURS.map((row) => (
-                <div key={row.days} className="flex items-center justify-between gap-4">
-                  <dt className="text-[var(--color-charcoal)]/70">{row.days}</dt>
-                  <dd
-                    className={
-                      row.hours === null
-                        ? "font-medium text-[#b0574a]"
-                        : "font-medium tabular-nums"
-                    }
-                  >
-                    {row.hours ?? "Zatvoreno"}
-                  </dd>
-                </div>
+            <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[13px] text-[var(--color-charcoal)]/60">
+              {TRUST_ITEMS.map((t) => (
+                <li key={t} className="flex items-center gap-1">
+                  <Check size={14} className="text-[var(--color-sage)]" strokeWidth={2.5} />
+                  {t}
+                </li>
               ))}
-            </dl>
-          </div>
-        </header>
+            </ul>
 
-        <div className="flex flex-col gap-12">
-          {/* Usluge po kategoriji */}
-          <section>
-            <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
+            {/* Mini-mockup potvrđenog termina — prodaje proizvod u prvoj sekundi */}
+            <div className="mt-10 flex justify-center">
+              <div
+                className="animate-float w-full max-w-xs rounded-2xl bg-white p-5 text-left shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
+                style={{ rotate: "-1.5deg" }}
+                aria-hidden="true"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-sage)]/12 text-[var(--color-sage)]">
+                    <CheckCircle2 size={22} strokeWidth={2} />
+                  </span>
+                  <div>
+                    <p className="font-semibold leading-tight">Termin potvrđen</p>
+                    <p className="text-[13px] text-[var(--color-charcoal)]/55">upravo sada</p>
+                  </div>
+                </div>
+                <div className="my-4 h-px bg-[var(--color-beige)]" />
+                <div className="flex flex-col gap-1.5 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-[var(--color-charcoal)]/55">Usluga</span>
+                    <span className="font-medium">Botoks</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-[var(--color-charcoal)]/55">Doktor</span>
+                    <span className="font-medium">{DEMO_DOCTOR.name}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-[var(--color-charcoal)]/55">Vreme</span>
+                    <span className="font-medium">petak u 10:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* BENEFITI */}
+        <section className="px-4 py-14 sm:px-6">
+          <div className="mx-auto grid w-full max-w-3xl gap-4 sm:grid-cols-3">
+            {BENEFITS.map((b) => (
+              <div key={b.title} className="rounded-2xl p-2 text-center sm:p-4">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]">
+                  <b.icon size={22} strokeWidth={1.75} />
+                </span>
+                <h3 className="mt-3 font-semibold">{b.title}</h3>
+                <p className="mx-auto mt-1 max-w-[26ch] text-sm text-[var(--color-charcoal)]/60">
+                  {b.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* USLUGE — mint pozadina razbija belu monotoniju */}
+        <section id="usluge" className="bg-[var(--color-mint)] px-4 py-14 sm:px-6">
+          <div className="mx-auto w-full max-w-3xl">
+            <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
               Usluge
             </h2>
-            <div className="flex flex-col gap-8">
+            <p className="mx-auto mt-2 max-w-md text-center text-[var(--color-charcoal)]/60">
+              Svaki tretman počinje razgovorom — prva konsultacija je uvek
+              prvi korak.
+            </p>
+            <div className="mt-8 flex flex-col gap-10">
               {servicesByCategory.map((cat) => (
                 <ServiceGroup key={cat.id} title={cat.label} items={cat.items} />
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Tim */}
-          <section>
-            <h2 className="mb-4 font-[family-name:var(--font-heading)] text-2xl font-semibold">
+        {/* TIM */}
+        <section className="px-4 py-14 sm:px-6">
+          <div className="mx-auto w-full max-w-3xl">
+            <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
               Naš tim
             </h2>
-            <div className="rounded-2xl bg-white/60 p-5 shadow-[var(--shadow-sm)] ring-1 ring-[var(--color-beige)]">
-              <h3 className="text-lg font-semibold">{DEMO_DOCTOR.name}</h3>
-              <p className="text-sm text-[var(--color-charcoal)]/60">
-                {DEMO_DOCTOR.title}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {DEMO_SERVICES.map((s) => (
+            <div className="mx-auto mt-8 max-w-lg rounded-2xl bg-white p-6 shadow-[var(--shadow-md)] ring-1 ring-[var(--color-beige)]">
+              <div className="flex items-center gap-4">
+                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-terracotta)] to-[var(--color-sage)] font-[family-name:var(--font-heading)] text-xl font-bold text-white">
+                  {DEMO_DOCTOR.name
+                    .replace(/^Dr\s+/i, "")
+                    .split(" ")
+                    .map((w) => w[0])
+                    .join("")}
+                </span>
+                <div>
+                  <h3 className="text-lg font-semibold">{DEMO_DOCTOR.name}</h3>
+                  <p className="text-sm text-[var(--color-charcoal)]/60">
+                    {DEMO_DOCTOR.title}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {DEMO_CATEGORIES.map((c) => (
                   <span
-                    key={s.id}
-                    className="rounded-full bg-[var(--color-terracotta)]/8 px-3 py-1 text-[13px] text-[var(--color-charcoal)]/80"
+                    key={c.id}
+                    className="rounded-full bg-[var(--color-terracotta)]/8 px-3 py-1 text-[13px] font-medium text-[var(--color-terracotta)]"
                   >
-                    {s.name}
+                    {c.label}
                   </span>
                 ))}
               </div>
             </div>
-          </section>
-        </div>
-      </div>
-    </main>
+          </div>
+        </section>
+
+        {/* TAMNA CTA TRAKA — pred footer */}
+        <section className="bg-[var(--color-dark)] px-4 py-14 text-center text-white sm:px-6">
+          <div className="mx-auto w-full max-w-xl">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl font-semibold">
+              Spremni za prvi korak?
+            </h2>
+            <p className="mt-2 text-white/70">
+              Zakazivanje traje manje od 60 sekundi — bez naloga i bez poziva.
+            </p>
+            <Link
+              href="/zakazivanje"
+              className="btn-press mt-6 inline-block rounded-xl bg-white px-8 py-3.5 font-medium text-[var(--color-dark)] shadow-[var(--shadow-md)] hover:bg-white/90"
+            >
+              Zakažite termin
+            </Link>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
 
@@ -122,37 +226,35 @@ function ServiceGroup({ title, items }: { title: string; items: Service[] }) {
   if (items.length === 0) return null;
   return (
     <div>
-      <h3 className="mb-3 text-sm font-medium uppercase tracking-[0.15em] text-[var(--color-terracotta)]">
+      <h3 className="mb-4 text-sm font-medium uppercase tracking-[0.15em] text-[var(--color-terracotta)]">
         {title}
       </h3>
-      <ul className="overflow-hidden rounded-xl ring-1 ring-[var(--color-beige)]">
-        {items.map((s, i) => {
+      <div className="grid gap-3 sm:grid-cols-2">
+        {items.map((s) => {
           const Icon = getServiceIcon(s.icon);
           return (
-            <li
+            <div
               key={s.id}
-              className={`flex items-start gap-4 bg-white/60 px-5 py-4 ${
-                i > 0 ? "border-t border-[var(--color-beige)]" : ""
-              }`}
+              className="card-interactive flex items-start gap-4 rounded-2xl bg-white p-5 shadow-[var(--shadow-sm)] ring-1 ring-[var(--color-beige)]"
             >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]">
-                <Icon size={18} strokeWidth={1.75} />
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]">
+                <Icon size={20} strokeWidth={1.75} />
               </span>
               <div>
-                <p className="font-medium">{s.name}</p>
+                <p className="font-semibold">{s.name}</p>
                 {s.description && (
-                  <p className="mt-0.5 text-sm text-[var(--color-charcoal)]/60">
+                  <p className="mt-0.5 text-sm leading-relaxed text-[var(--color-charcoal)]/60">
                     {s.description}
                   </p>
                 )}
-                <p className="mt-1 text-sm text-[var(--color-charcoal)]/50">
+                <p className="mt-2 inline-block rounded-full bg-[var(--color-mint-strong)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-charcoal)]/70">
                   {formatDuration(s.duration_minutes)}
                 </p>
               </div>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 }

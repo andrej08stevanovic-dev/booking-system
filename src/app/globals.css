@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  /* Demo Doktor brand tokens — čista bela + teal akcenat */
+  /* Derma Nova brand tokens — slojevita teal paleta (svetlo → tamno) */
   --color-cream: #ffffff;
   --color-charcoal: #0f172a;
   --color-terracotta: #0f766e;
-  --color-beige: #f0fdfa;
+  --color-beige: #d8e4e1; /* vidljiva ivica kartica (bila je nevidljiva #f0fdfa) */
   --color-sage: #059669;
+
+  /* Slojevi pozadina — ritam sekcija */
+  --color-mint: #f0f6f4; /* naizmenična svetla sekcija */
+  --color-mint-strong: #e3efec; /* tint unutar mint sekcije (chipovi, ikonice) */
+  --color-dark: #0b3634; /* tamna CTA/footer traka */
+  --color-dark-soft: #10403d; /* kartice unutar tamne sekcije */
+
+  /* Topao akcenat — ŠTEDLJIVO (bedževi, zvezdice), nikad velike površine */
+  --color-gold: #c08a3e;
 
   --color-bg-section: #f7f9fa;
   --color-text-secondary: #334155;
@@ -67,6 +76,23 @@ body {
 }
 .card-interactive:active {
   transform: scale(0.985);
+}
+/* Lift samo na uređajima sa pravim hover-om (ne na touch ekranu) */
+@media (hover: hover) {
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .card-interactive:hover:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Hero pozadina — suptilan teal tint, bez tvrdih ivica */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(15, 118, 110, 0.1), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 20%, rgba(5, 150, 105, 0.05), transparent 70%);
 }
 
 /* ---------- Keyframes ---------- */
@@ -159,6 +185,20 @@ body {
   }
 }
 
+/* Plutajuća kartica u hero-u — lagan float, bez cirkusa */
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.animate-float {
+  animation: floatY 5s ease-in-out infinite;
+}
+
 /* Modal + backdrop */
 @keyframes slideUp {
   from {
@@ -194,6 +234,7 @@ body {
   .animate-slide-left,
   .animate-pulse-highlight,
   .animate-slide-up,
+  .animate-float,
   .animate-backdrop {
     animation: none !important;
     transition: none !important;

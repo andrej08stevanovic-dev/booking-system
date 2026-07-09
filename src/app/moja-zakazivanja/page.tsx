@@ -80,7 +80,7 @@ export default async function MojaZakazivanjaPage() {
         </header>
 
         {bookings.length === 0 ? (
-          <div className="rounded-xl bg-[var(--color-beige)] px-5 py-8 text-center">
+          <div className="rounded-xl bg-[var(--color-mint)] px-5 py-8 text-center ring-1 ring-[var(--color-beige)]">
             <p className="text-[var(--color-charcoal)]/80">
               Nemate zakazanih termina.
             </p>
@@ -157,7 +157,7 @@ function BookingCard({
             {booking.staffName}
           </p>
         </div>
-        <span className="shrink-0 rounded-full bg-[var(--color-beige)] px-3 py-1 text-xs font-medium text-[var(--color-charcoal)]/80">
+        <span className="shrink-0 rounded-full bg-[var(--color-mint-strong)] px-3 py-1 text-xs font-medium text-[var(--color-charcoal)]/80">
           {STATUS_LABELS[booking.status]}
         </span>
       </div>

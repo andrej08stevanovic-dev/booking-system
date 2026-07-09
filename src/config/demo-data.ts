@@ -1,9 +1,9 @@
-// Demo sadržaj za "Demo Doktor" reskin — NE dolazi iz baze (Faza 3 reskin plana).
+// Demo sadržaj za "Derma Nova" reskin — NE dolazi iz baze (Faza 3 reskin plana).
 // Oblik polja (duration_minutes, price) namerno prati postojeće tipove iz
 // @/features/booking/types, da booking-flow komponente rade bez izmena.
 
 export const DEMO_CLINIC = {
-  name: "Demo Doktor",
+  name: "Derma Nova",
   tagline: "Ordinacija estetske medicine",
   city: "Vranje",
 };
@@ -95,8 +95,10 @@ export const DEMO_DOCTOR = {
   services: DEMO_SERVICES.map((s) => s.id),
 };
 
+// Prikaz mora da se poklapa sa demo-availability.ts (generator seče u 17:00
+// radnim danima) — inače demo izgleda bagovito kad neko proba da zakaže 18:00.
 export const DEMO_WORKING_HOURS = [
-  { days: "Ponedeljak–Petak", hours: "09:00–19:00" },
+  { days: "Ponedeljak–Petak", hours: "09:00–17:00" },
   { days: "Subota", hours: "10:00–14:00" },
   { days: "Nedelja", hours: null as string | null },
 ];
