@@ -72,9 +72,19 @@ export function BookingFlow({
 
   // Gladak skrol do sledećeg koraka. Odlaganje: sekcija se tek pojavljuje
   // (uslovni render), pa mora prvo da se nacrta da bi skrol imao metu.
+  // Sekcija se CENTRIRA na ekranu; ako je viša od ekrana, poravna se odmah
+  // ispod sticky hedera — nikad block:"start" koji je gurao korak na sam vrh.
   function scrollToStep(ref: React.RefObject<HTMLElement | null>) {
     setTimeout(() => {
-      ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const el = ref.current;
+      if (!el) return;
+      const headerOffset = 88;
+      const rect = el.getBoundingClientRect();
+      const offset = Math.max((window.innerHeight - rect.height) / 2, headerOffset);
+      window.scrollTo({
+        top: rect.top + window.scrollY - offset,
+        behavior: "smooth",
+      });
     }, 100);
   }
 
@@ -423,7 +433,7 @@ export function BookingFlow({
 
       {/* 2) RADNIK */}
       {service && (
-        <section ref={staffSectionRef} className="scroll-mt-20 animate-slide-right">
+        <section ref={staffSectionRef} className="animate-slide-right">
           <StepTitle n={2} title="Izaberite doktora" done={hasStaffPick} />
           {availableStaff.length === 0 ? (
             <p className="rounded-xl bg-[var(--color-mint-strong)] px-5 py-4 text-[var(--color-charcoal)]/80">
@@ -466,7 +476,7 @@ export function BookingFlow({
 
       {/* 3) DATUM */}
       {service && hasStaffPick && (
-        <section ref={dateSectionRef} className="scroll-mt-20 animate-slide-right">
+        <section ref={dateSectionRef} className="animate-slide-right">
           <StepTitle n={3} title="Izaberite datum" done={!!date} />
           <DatePicker
             value={date}
@@ -481,7 +491,7 @@ export function BookingFlow({
 
       {/* 4) TERMINI */}
       {service && hasStaffPick && date && (
-        <section ref={slotsSectionRef} className="scroll-mt-20 animate-slide-right">
+        <section ref={slotsSectionRef} className="animate-slide-right">
           <StepTitle n={4} title="Izaberite termin" done={!!selectedSlot} />
 
           {loaded && outOfRange && (
@@ -537,7 +547,7 @@ export function BookingFlow({
 
       {/* PODACI MUŠTERIJE — kad je termin + dodela razrešena */}
       {selectedSlot && assignment && service && (
-        <section ref={customerSectionRef} className="scroll-mt-20 animate-slide-right">
+        <section ref={customerSectionRef} className="animate-slide-right">
           <StepTitle n={5} title="Vaši podaci" done={false} />
           <div className="flex flex-col gap-3">
             <div>
