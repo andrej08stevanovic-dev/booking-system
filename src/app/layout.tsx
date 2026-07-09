@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { TopProgressBar } from "@/components/TopProgressBar";
+import { DEMO_CLINIC } from "@/config/demo-data";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -17,8 +18,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Optima — frizerski salon",
-  description: "Online zakazivanje za salon Optima, Vranje — kosa i nokti.",
+  title: `${DEMO_CLINIC.name} — ${DEMO_CLINIC.tagline}`,
+  description: `Online zakazivanje termina — ${DEMO_CLINIC.tagline}, ${DEMO_CLINIC.city}.`,
 };
 
 export default function RootLayout({
