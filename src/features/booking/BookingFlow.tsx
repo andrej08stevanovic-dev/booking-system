@@ -4,7 +4,7 @@ import { useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import { DateTime } from "luxon";
 import { DatePicker } from "@/components/DatePicker";
-import { DEMO_CATEGORIES } from "@/config/demo-data";
+import { DEMO_CATEGORIES, DEMO_CLINIC } from "@/config/demo-data";
 import { getServiceIcon } from "@/config/service-icons";
 import type { MergedSlot, Service, StaffMember } from "./types";
 import { computeDemoSlots } from "./demo-availability";
@@ -25,10 +25,6 @@ type SelectedSlot = { startUtcISO: string; label: string };
 //  - 'any': izabrala "Bilo ko slobodan" — sistem NIKAD ne pita kod koga;
 //    server dodeljuje konkretnog radnika tek pri potvrdi.
 type Assignment = { origin: "specific"; staffId: string; staffName: string } | { origin: "any" } | null;
-
-function formatPrice(price: number) {
-  return `${Number(price).toLocaleString("sr-RS")} din`;
-}
 
 function formatDuration(min: number) {
   if (min < 60) return `${min} min`;
@@ -272,13 +268,13 @@ export function BookingFlow({
           className="font-[family-name:var(--font-heading)] text-3xl font-semibold"
           style={{ animation: "fadeIn var(--duration-normal) var(--ease-out-expo) 0.5s both" }}
         >
-          Termin je zakazan!
+          Vaš termin je zakazan!
         </h2>
         <p
           className="mt-2 text-[var(--color-charcoal)]/70"
           style={{ animation: "fadeIn var(--duration-normal) var(--ease-out-expo) 0.6s both" }}
         >
-          Vidimo se u salonu Optima.
+          Vidimo se u ordinaciji {DEMO_CLINIC.name}.
         </p>
 
         {confirmedWasAny && confirmedStaffName && (
@@ -301,7 +297,6 @@ export function BookingFlow({
             value={`${formatDate(date)} u ${selectedSlot.label}`}
           />
           <Row label="Trajanje" value={formatDuration(service.duration_minutes)} />
-          <Row label="Cena" value={formatPrice(service.price)} />
           <Row label="Ime" value={fullName.trim()} />
           <Row label="Telefon" value={phone.trim()} />
           {email.trim() && <Row label="Email" value={email.trim()} />}
@@ -313,7 +308,7 @@ export function BookingFlow({
             onClick={resetAll}
             className="btn-press mt-6 w-full rounded-xl bg-[var(--color-terracotta)] px-6 py-3 font-medium text-white shadow-[var(--shadow-sm)] hover:opacity-90"
           >
-            Zakaži još jedan termin
+            Zakažite još jedan termin
           </button>
 
           <div className="mt-3 flex flex-col-reverse gap-3 sm:flex-row">
@@ -327,7 +322,7 @@ export function BookingFlow({
               href="/prijava"
               className="btn-press flex-1 rounded-xl border border-[var(--color-beige)] px-6 py-3 text-center font-medium text-[var(--color-charcoal)] hover:bg-[var(--color-beige)]"
             >
-              Pogledaj svoje termine
+              Pogledajte svoje termine
             </Link>
           </div>
         </div>
