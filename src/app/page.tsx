@@ -6,7 +6,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import {
-  DEMO_CLINIC,
   DEMO_CATEGORIES,
   DEMO_SERVICES,
   DEMO_DOCTOR,
@@ -53,34 +52,21 @@ export default function Home() {
     <>
       <SiteHeader />
       <main>
-        {/* HERO — jedan ekran, jedna misao: bedž → naslov → rečenica → CTA.
+        {/* HERO — jedan ekran, jedna misao: naslov → CTA → dokaz (mockup).
             Levo poravnat na mobilnom (editorial), centriran na sm+.
             Elementi ulaze stagger animacijom (animate-rise + animationDelay). */}
-        <section className="hero-glow px-5 pb-16 pt-12 sm:px-6 sm:pb-16 sm:pt-20">
+        <section className="hero-glow px-5 pb-20 pt-16 sm:px-6 sm:pb-16 sm:pt-24">
           <div className="mx-auto w-full max-w-2xl sm:text-center">
-            <span className="animate-rise inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[var(--color-terracotta)] ring-1 ring-[var(--color-beige)]">
-              {DEMO_CLINIC.tagline} · {DEMO_CLINIC.city}
-            </span>
-            <h1
-              className="animate-rise mt-6 font-[family-name:var(--font-display)] text-[44px] font-medium leading-[1.06] tracking-[-0.015em] sm:text-6xl"
-              style={{ animationDelay: "70ms" }}
-            >
+            <h1 className="animate-rise font-[family-name:var(--font-display)] text-[44px] font-medium leading-[1.06] tracking-[-0.015em] sm:text-6xl">
               Vaš termin.
               <span className="block italic text-[var(--color-terracotta)]">
                 Bez poziva i čekanja.
               </span>
             </h1>
-            <p
-              className="animate-rise mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-charcoal)]/70 sm:mx-auto sm:text-base"
-              style={{ animationDelay: "140ms" }}
-            >
-              Izaberite uslugu i vreme koje vam odgovara — potvrda stiže istog
-              trenutka, 24 sata dnevno.
-            </p>
 
             <div
-              className="animate-rise mt-8 flex flex-col gap-5 sm:items-center"
-              style={{ animationDelay: "210ms" }}
+              className="animate-rise mt-10 flex flex-col gap-5 sm:items-center"
+              style={{ animationDelay: "120ms" }}
             >
               <Link
                 href="/zakazivanje"
@@ -98,45 +84,47 @@ export default function Home() {
             </div>
 
             <p
-              className="animate-rise mt-7 text-[13px] tracking-wide text-[var(--color-charcoal)]/55"
-              style={{ animationDelay: "280ms" }}
+              className="animate-rise mt-8 text-[13px] tracking-wide text-[var(--color-charcoal)]/55"
+              style={{ animationDelay: "200ms" }}
             >
               {TRUST_ITEMS.join(" · ")}
             </p>
 
             {/* Mini-mockup potvrđenog termina — prodaje proizvod u prvoj sekundi.
-                Uspravan i ceo vidljiv; bez rotacije koja je na telefonu delovala
-                kao greška. */}
+                Rotacija stoji na omotaču, NE na .animate-float elementu:
+                floatY keyframes prepisuju transform, pa bi rotate tamo nestao. */}
             <div
-              className="animate-rise mt-12 flex sm:mt-14 sm:justify-center"
-              style={{ animationDelay: "360ms" }}
+              className="animate-rise mt-14 flex justify-center sm:mt-16"
+              style={{ animationDelay: "300ms" }}
             >
-              <div
-                className="animate-float w-full max-w-xs rounded-2xl bg-white p-5 text-left shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
-                aria-hidden="true"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-sage)]/12 text-[var(--color-sage)]">
-                    <CheckCircle2 size={22} strokeWidth={2} />
-                  </span>
-                  <div>
-                    <p className="font-semibold leading-tight">Termin potvrđen</p>
-                    <p className="text-[13px] text-[var(--color-charcoal)]/55">upravo sada</p>
+              <div className="w-full max-w-xs -rotate-2">
+                <div
+                  className="animate-float rounded-2xl bg-white p-5 text-left shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
+                  aria-hidden="true"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-sage)]/12 text-[var(--color-sage)]">
+                      <CheckCircle2 size={22} strokeWidth={2} />
+                    </span>
+                    <div>
+                      <p className="font-semibold leading-tight">Termin potvrđen</p>
+                      <p className="text-[13px] text-[var(--color-charcoal)]/55">upravo sada</p>
+                    </div>
                   </div>
-                </div>
-                <div className="my-4 h-px bg-[var(--color-beige)]" />
-                <div className="flex flex-col gap-1.5 text-sm">
-                  <div className="flex justify-between gap-4">
-                    <span className="text-[var(--color-charcoal)]/55">Usluga</span>
-                    <span className="font-medium">Botoks</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="text-[var(--color-charcoal)]/55">Doktor</span>
-                    <span className="font-medium">{DEMO_DOCTOR.name}</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="text-[var(--color-charcoal)]/55">Vreme</span>
-                    <span className="font-medium">petak u 10:00</span>
+                  <div className="my-4 h-px bg-[var(--color-beige)]" />
+                  <div className="flex flex-col gap-1.5 text-sm">
+                    <div className="flex justify-between gap-4">
+                      <span className="text-[var(--color-charcoal)]/55">Usluga</span>
+                      <span className="font-medium">Botoks</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-[var(--color-charcoal)]/55">Doktor</span>
+                      <span className="font-medium">{DEMO_DOCTOR.name}</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-[var(--color-charcoal)]/55">Vreme</span>
+                      <span className="font-medium">petak u 10:00</span>
+                    </div>
                   </div>
                 </div>
               </div>
