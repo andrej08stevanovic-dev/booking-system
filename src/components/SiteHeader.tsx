@@ -15,7 +15,7 @@ export function SiteHeader() {
             href="/zakazivanje"
             className="border-b-2 border-transparent pb-0.5 transition hover:border-[var(--color-terracotta)] hover:text-[var(--color-terracotta)]"
           >
-            Zakaži termin
+            Zakažite termin
           </Link>
           <Link
             href="/prijava"

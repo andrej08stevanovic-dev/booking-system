@@ -26,7 +26,7 @@ export default function ZakazivanjePage() {
             ← Tim i usluge
           </Link>
           <h1 className="mt-3 font-[family-name:var(--font-heading)] text-3xl font-semibold sm:text-4xl">
-            Zakaži termin
+            Zakažite termin
           </h1>
           <p className="mt-2 text-[var(--color-charcoal)]/70">
             Izaberite uslugu, doktora i vreme.

@@ -88,7 +88,7 @@ export default async function MojaZakazivanjaPage() {
               href="/zakazivanje"
               className="mt-4 inline-block rounded-xl bg-[var(--color-terracotta)] px-6 py-3 font-medium text-white shadow-sm transition hover:opacity-90"
             >
-              Zakaži termin
+              Zakažite termin
             </Link>
           </div>
         ) : (

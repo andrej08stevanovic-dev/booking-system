@@ -48,7 +48,7 @@ export default async function PrijavaPage({
               type="submit"
               className="rounded-xl bg-[var(--color-terracotta)] px-6 py-3 font-medium text-white shadow-sm transition hover:opacity-90"
             >
-              Pošalji link
+              Pošaljite link
             </button>
           </form>
         )}

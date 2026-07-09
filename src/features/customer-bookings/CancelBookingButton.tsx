@@ -38,7 +38,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
           }}
           className="rounded-xl border border-[var(--color-terracotta)] px-5 py-2 text-sm font-medium text-[var(--color-terracotta)] transition hover:bg-[#fdece8]"
         >
-          Otkaži termin
+          Otkažite termin
         </button>
       </div>
     );
@@ -64,7 +64,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
           disabled={isPending}
           className="rounded-xl border border-[var(--color-beige)] px-5 py-2 text-sm font-medium transition hover:bg-[var(--color-beige)] disabled:opacity-50"
         >
-          Ne, zadrži
+          Ne, zadržite
         </button>
         <button
           type="button"
@@ -72,7 +72,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
           disabled={isPending}
           className="flex-1 rounded-xl bg-[var(--color-terracotta)] px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:opacity-90 disabled:opacity-60"
         >
-          {isPending ? "Otkazujem…" : "Da, otkaži"}
+          {isPending ? "Otkazujem…" : "Da, otkažite"}
         </button>
       </div>
     </div>
