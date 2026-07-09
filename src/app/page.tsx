@@ -54,22 +54,22 @@ export default function Home() {
       <SiteHeader />
       <main>
         {/* HERO */}
-        <section className="hero-glow px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+        <section className="hero-glow px-4 pb-20 pt-14 sm:px-6 sm:pb-16 sm:pt-16">
           <div className="mx-auto w-full max-w-2xl text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-[13px] font-medium text-[var(--color-terracotta)] ring-1 ring-[var(--color-beige)]">
               {DEMO_CLINIC.tagline} · {DEMO_CLINIC.city}
             </span>
-            <h1 className="mt-5 font-[family-name:var(--font-heading)] text-4xl font-semibold leading-[1.1] tracking-[-0.02em] sm:text-5xl">
+            <h1 className="mt-6 font-[family-name:var(--font-heading)] text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] sm:mt-5 sm:text-5xl sm:leading-[1.1]">
               Zakažite termin{" "}
               <span className="text-[var(--color-terracotta)]">online</span> —
               bez poziva i čekanja
             </h1>
-            <p className="mx-auto mt-4 max-w-md text-[var(--color-charcoal)]/70">
+            <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-[var(--color-charcoal)]/70 sm:mt-4 sm:text-base">
               Izaberite uslugu i vreme koje vam odgovara. Potvrda stiže odmah,
               dostupno 24 sata dnevno.
             </p>
 
-            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:mt-7 sm:flex-row">
               <Link
                 href="/zakazivanje"
                 className="btn-press w-full rounded-xl bg-[var(--color-terracotta)] px-8 py-3.5 font-medium text-white shadow-[var(--shadow-md)] hover:bg-[var(--color-accent-hover)] sm:w-auto"
@@ -84,7 +84,7 @@ export default function Home() {
               </a>
             </div>
 
-            <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[13px] text-[var(--color-charcoal)]/60">
+            <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px] text-[var(--color-charcoal)]/60 sm:mt-5">
               {TRUST_ITEMS.map((t) => (
                 <li key={t} className="flex items-center gap-1">
                   <Check size={14} className="text-[var(--color-sage)]" strokeWidth={2.5} />
@@ -94,7 +94,7 @@ export default function Home() {
             </ul>
 
             {/* Mini-mockup potvrđenog termina — prodaje proizvod u prvoj sekundi */}
-            <div className="mt-10 flex justify-center">
+            <div className="mt-12 flex justify-center sm:mt-10">
               <div
                 className="animate-float w-full max-w-xs rounded-2xl bg-white p-5 text-left shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-beige)]"
                 style={{ rotate: "-1.5deg" }}
@@ -130,8 +130,8 @@ export default function Home() {
         </section>
 
         {/* BENEFITI */}
-        <section className="px-4 py-14 sm:px-6">
-          <div className="mx-auto grid w-full max-w-3xl gap-4 sm:grid-cols-3">
+        <section className="px-4 py-16 sm:px-6 sm:py-14">
+          <div className="mx-auto grid w-full max-w-3xl gap-8 sm:grid-cols-3 sm:gap-4">
             {BENEFITS.map((b) => (
               <div key={b.title} className="rounded-2xl p-2 text-center sm:p-4">
                 <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)]">
@@ -147,7 +147,7 @@ export default function Home() {
         </section>
 
         {/* USLUGE — mint pozadina razbija belu monotoniju */}
-        <section id="usluge" className="bg-[var(--color-mint)] px-4 py-14 sm:px-6">
+        <section id="usluge" className="bg-[var(--color-mint)] px-4 py-16 sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-3xl">
             <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
               Usluge
@@ -165,7 +165,7 @@ export default function Home() {
         </section>
 
         {/* TIM */}
-        <section className="px-4 py-14 sm:px-6">
+        <section className="px-4 py-16 sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-3xl">
             <h2 className="text-center font-[family-name:var(--font-heading)] text-3xl font-semibold">
               Naš tim
@@ -201,7 +201,7 @@ export default function Home() {
         </section>
 
         {/* TAMNA CTA TRAKA — pred footer */}
-        <section className="bg-[var(--color-dark)] px-4 py-14 text-center text-white sm:px-6">
+        <section className="bg-[var(--color-dark)] px-4 py-16 text-center text-white sm:px-6 sm:py-14">
           <div className="mx-auto w-full max-w-xl">
             <h2 className="font-[family-name:var(--font-heading)] text-3xl font-semibold">
               Spremni za prvi korak?
