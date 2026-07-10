@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useOutsideClick } from "./useOutsideClick";
+import { useAnchoredPopover } from "./useAnchoredPopover";
 
 type Props = {
   value: string; // "" ili "HH:mm"
@@ -32,7 +34,18 @@ export function TimePicker({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLButtonElement>(null);
 
-  useOutsideClick(wrapperRef, open, () => setOpen(false));
+  // Portal (createPortal) zahteva document.body — samo posle mount-a na klijentu.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  // Portal u body + fixed usidren na triger — isti razlog kao u DatePicker-u:
+  // popover mora da lebdi iznad svega i van skrolabilnog/animiranog pretka.
+  const { popoverRef, style: popoverStyle } = useAnchoredPopover(wrapperRef, open);
+
+  useOutsideClick([wrapperRef, popoverRef], open, () => setOpen(false));
 
   useEffect(() => {
     if (open) selectedRef.current?.scrollIntoView({ block: "center" });
@@ -61,9 +74,15 @@ export function TimePicker({
         {value || <span className="text-[var(--color-charcoal)]/50">{placeholder}</span>}
       </button>
 
-      {open && (
-        <div className="absolute z-20 mt-2 max-h-64 w-45 overflow-y-auto rounded-2xl bg-white p-2 shadow-xl ring-1 ring-[var(--color-beige)]">
-          <div className="grid grid-cols-2 gap-1">
+      {open &&
+        mounted &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            style={popoverStyle}
+            className="z-[70] max-h-64 w-45 overflow-y-auto rounded-2xl bg-white p-2 shadow-xl ring-1 ring-[var(--color-beige)]"
+          >
+            <div className="grid grid-cols-2 gap-1">
             {options.map((t) => {
               const isSelected = t === value;
               const isDisabled = isSlotDisabled?.(t) ?? false;
@@ -86,9 +105,10 @@ export function TimePicker({
                 </button>
               );
             })}
-          </div>
-        </div>
-      )}
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

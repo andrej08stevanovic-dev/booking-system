@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { DateTime } from "luxon";
 import { useOutsideClick } from "./useOutsideClick";
+import { useAnchoredPopover } from "./useAnchoredPopover";
 
 type Props = {
   value: string; // "" ili "YYYY-MM-DD"
@@ -55,7 +56,14 @@ export function DatePicker({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  useOutsideClick(wrapperRef, open && !isMobile, () => setOpen(false));
+  // Desktop popover: portal u body + fixed usidren na triger (beži iz svih
+  // stacking-context-ova koje prave animirane sekcije). Vidi useAnchoredPopover.
+  const { popoverRef, style: popoverStyle } = useAnchoredPopover(
+    wrapperRef,
+    open && !isMobile
+  );
+
+  useOutsideClick([wrapperRef, popoverRef], open && !isMobile, () => setOpen(false));
 
   // Kad se popover otvori, skoči na mesec trenutne vrednosti (ne u efektu —
   // menja se u event handler-u da izbegnemo kaskadni render).
@@ -228,11 +236,19 @@ export function DatePicker({
           document.body
         )}
 
-      {open && !isMobile && (
-        <div className="absolute z-20 mt-2 w-72 rounded-2xl bg-white p-4 shadow-xl ring-1 ring-[var(--color-beige)]">
-          {calendarContent}
-        </div>
-      )}
+      {open &&
+        !isMobile &&
+        mounted &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            style={popoverStyle}
+            className="z-[70] w-72 rounded-2xl bg-white p-4 shadow-xl ring-1 ring-[var(--color-beige)]"
+          >
+            {calendarContent}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
